@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "templates": [
+    {
+      "key": "pocketmine-mp:composer:pmmp",
+      "softwareSlug": "pocketmine-mp",
+      "label": "PMMP",
+      "path": "templates/pmmp.yml"
+    },
+    {
+      "key": "axolotl:axolotl",
+      "softwareSlug": "axolotl",
+      "label": "Axolotl",
+      "path": "templates/axolotl.yml"
+    }
+  ]
+}
