@@ -6,7 +6,7 @@ server plugins, maintained by BedrockNexus and community contributors.
 | Server software | Builder | PHP | Template |
 | --- | --- | --- | --- |
 | PocketMine-MP 5 | BedrockNexus Pharynx `0.4.1-bedrocknexus.1` | 8.2 | [pmmp.yml](templates/pmmp.yml) |
-| Axolotl-PM 5 | NhanAZ DevTools `2.0.1` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
+| Axolotl-PM 5 | NhanAZ DevTools `2.0.2` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
 
 ## Use a template
 
@@ -45,7 +45,7 @@ for Hub's managed build-selection gate.
 The Axolotl template uses DevTools' default local virion handling. Its optional
 Composer preparation is disabled; dependency-heavy projects may need an adapted
 template. See the upstream
-[dependency guide](https://github.com/NhanAZ/DevTools/blob/13ed3284bce02e4b771eb2428bf2f226f79394b6/docs/dependencies.md).
+[dependency guide](https://github.com/NhanAZ/DevTools/blob/3f5752b32da49bfd1e5c28bad304d110a42f76ff/docs/dependencies.md).
 This Axolotl template does not establish PMMP compatibility.
 
 The initial templates passed workflow linting and Hub's template validator.
