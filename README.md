@@ -45,7 +45,7 @@ for Hub's managed build-selection gate.
 The Axolotl template uses DevTools' default local virion handling. Its optional
 Composer preparation is disabled; dependency-heavy projects may need an adapted
 template. See the upstream
-[dependency guide](https://github.com/NhanAZ/DevTools/blob/5c68bdc7440e962c69f69317d96374315d25d645/docs/dependencies.md).
+[dependency guide](https://github.com/NhanAZ/DevTools/blob/13ed3284bce02e4b771eb2428bf2f226f79394b6/docs/dependencies.md).
 This Axolotl template does not establish PMMP compatibility.
 
 The initial templates passed workflow linting and Hub's template validator.
