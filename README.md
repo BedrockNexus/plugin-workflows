@@ -5,7 +5,6 @@ server plugins, maintained by BedrockNexus and community contributors.
 
 | Server software | Builder | PHP | Template |
 | --- | --- | --- | --- |
-| PocketMine-MP 5 | BedrockNexus Pharynx `0.4.1-bedrocknexus.1` | 8.2 | [pmmp.yml](templates/pmmp.yml) |
 | Axolotl-PM 5 | NhanAZ DevTools `2.1.1` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
 
 ## Use a template
@@ -54,8 +53,7 @@ lists them too, set `import-poggit-libraries: false` in `devtools.yml`.
 
 This Axolotl template does not establish PMMP compatibility.
 
-The initial templates passed workflow linting and Hub's template validator.
-The Pharynx release also built a minimal fixture locally with PHP 8.2. Hosted
+The template passed workflow linting and Hub's template validator. Hosted
 Axolotl builds and actual server behavior still need verification.
 
 ## Contribute

@@ -25,7 +25,7 @@ through the current Hub build picker.
 Validate changes with actionlint, for example:
 
 ```sh
-actionlint templates/pmmp.yml templates/axolotl.yml
+actionlint templates/axolotl.yml
 ```
 
 Describe the server/API version, dependency behavior and testing in your pull
