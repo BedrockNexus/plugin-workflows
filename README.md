@@ -6,7 +6,7 @@ server plugins, maintained by BedrockNexus and community contributors.
 | Server software | Builder | PHP | Template |
 | --- | --- | --- | --- |
 | PocketMine-MP 5 | BedrockNexus Pharynx `0.4.1-bedrocknexus.1` | 8.2 | [pmmp.yml](templates/pmmp.yml) |
-| Axolotl-PM 5 | NhanAZ DevTools `2.0.2` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
+| Axolotl-PM 5 | NhanAZ DevTools `2.1.1` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
 
 ## Use a template
 
@@ -42,11 +42,19 @@ for Hub's managed build-selection gate.
 - Builds produce artifacts; BedrockNexus handles moderation and approved release
   publication separately.
 
-The Axolotl template uses DevTools' default local virion handling. Its optional
-Composer preparation is disabled; dependency-heavy projects may need an adapted
-template. See the upstream
-[dependency guide](https://github.com/NhanAZ/DevTools/blob/3f5752b32da49bfd1e5c28bad304d110a42f76ff/docs/dependencies.md).
-This Axolotl template does not establish PMMP compatibility.
+The Axolotl template supports both local and Composer virions. A non-empty
+`virions/` directory takes precedence and is used as the local dependency
+source. Otherwise, projects with both `composer.json` and `composer.lock` use
+DevTools' Composer preparation in `.devtools-virions`. Projects with neither
+source build without virion dependencies, while an incomplete Composer setup
+fails with an actionable message.
+
+When both local and Composer sources are present, local virions take precedence.
+Use one dependency source for deterministic builds.
+
+See the upstream
+[dependency guide](https://github.com/NhanAZ/DevTools/blob/8b7db655845dc5d9e5e51b26a5d0815d5f7e5323/docs/dependencies.md).
+The Axolotl template does not establish PMMP compatibility.
 
 The initial templates passed workflow linting and Hub's template validator.
 The Pharynx release also built a minimal fixture locally with PHP 8.2. Hosted

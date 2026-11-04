@@ -33,13 +33,53 @@ jobs:
       - name: Check PHP syntax
         run: find src -name '*.php' -print0 | xargs -0 -r -n1 php -l
 
+      - name: Resolve DevTools dependency mode
+        id: resolve_dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          local_virion_file=''
+          if [ -d virions ]; then
+            local_virion_file="$(find virions -type f ! -name '.gitkeep' -print -quit)"
+          fi
+
+          if [ -n "$local_virion_file" ]; then
+            echo 'virions=virions' >> "$GITHUB_OUTPUT"
+            echo 'prepare=false' >> "$GITHUB_OUTPUT"
+            echo 'Using local virions/ sources.'
+            exit 0
+          fi
+
+          has_composer_json=false
+          has_composer_lock=false
+          if [ -f composer.json ]; then has_composer_json=true; fi
+          if [ -f composer.lock ]; then has_composer_lock=true; fi
+
+          if [ "$has_composer_json" != "$has_composer_lock" ]; then
+            echo 'Composer dependency preparation requires both composer.json and composer.lock.' >&2
+            echo 'Commit a lockfile or provide virion sources in virions/.' >&2
+            exit 1
+          fi
+
+          if [ "$has_composer_json" = true ]; then
+            echo 'virions=.devtools-virions' >> "$GITHUB_OUTPUT"
+            echo 'prepare=true' >> "$GITHUB_OUTPUT"
+            echo 'Preparing locked Composer virions.'
+          else
+            echo 'virions=virions' >> "$GITHUB_OUTPUT"
+            echo 'prepare=false' >> "$GITHUB_OUTPUT"
+            echo 'No local or Composer virion dependencies detected.'
+          fi
+
       - name: Build with DevTools
         id: build
-        uses: NhanAZ/DevTools@3f5752b32da49bfd1e5c28bad304d110a42f76ff # v2.0.2
+        uses: NhanAZ/DevTools@8b7db655845dc5d9e5e51b26a5d0815d5f7e5323 # v2.1.1
         with:
           project: .
+          virions: ${{ steps.resolve_dependencies.outputs.virions }}
           output: build
-          prepare-dependencies: 'false'
+          prepare-dependencies: ${{ steps.resolve_dependencies.outputs.prepare }}
 
       - name: Stage the plugin file
         env:
