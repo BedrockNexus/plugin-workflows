@@ -5,7 +5,7 @@ server plugins, maintained by BedrockNexus and community contributors.
 
 | Server software | Builder | PHP | Template |
 | --- | --- | --- | --- |
-| Axolotl-PM 5 | NhanAZ DevTools `2.1.1` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
+| Axolotl-PM 5 | AxolotlBucketLabs DevTools `3.0.0` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
 
 ## Use a template
 
@@ -45,7 +45,7 @@ The Axolotl template gets libraries from Composer. Declare them in
 `composer.json` and commit `composer.lock`, which pins the versions a build
 bundles. Plugins without runtime libraries build without a lockfile. Each library
 must be a supported Composer virion; see the upstream
-[dependency guide](https://github.com/NhanAZ/DevTools/blob/8b7db655845dc5d9e5e51b26a5d0815d5f7e5323/docs/dependencies.md).
+[dependency guide](https://github.com/AxolotlBucketLabs/DevTools/blob/04fd726101109739bf1fd629dbe8499d3e2864bb/docs/dependencies.md).
 
 The template no longer reads libraries from a committed `virions/` folder. Before
 updating an installed workflow, move those libraries to Composer. If `.poggit.yml`
