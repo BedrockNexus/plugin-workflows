@@ -6,6 +6,12 @@
       "softwareSlug": "axolotl",
       "label": "Axolotl",
       "path": "templates/axolotl.yml"
+    },
+    {
+      "key": "quark:quark",
+      "softwareSlug": "quark",
+      "label": "Quark",
+      "path": "templates/quark.yml"
     }
   ]
 }
