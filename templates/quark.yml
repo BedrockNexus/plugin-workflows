@@ -57,14 +57,15 @@ jobs:
 
           BUILD_ARGS=(
             -s "src"
+            -f "plugin.toml"
           )
 
           if [[ -d resources ]]; then
-            BUILD_ARGS+=(-f "resources:resources")
+            BUILD_ARGS+=(-f "resources")
           fi
 
           if [[ -f composer.json ]]; then
-            BUILD_ARGS+=(-c)
+            BUILD_ARGS+=(-c=.)
           fi
 
           php "$RUNNER_TEMP/pharynx.phar" "${BUILD_ARGS[@]}"
