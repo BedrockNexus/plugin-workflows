@@ -12,6 +12,12 @@
       "softwareSlug": "quark",
       "label": "Quark",
       "path": "templates/quark.yml"
+    },
+    {
+      "key": "altay:altay",
+      "softwareSlug": "altay",
+      "label": "Altay",
+      "path": "templates/altay.yml"
     }
   ]
 }
