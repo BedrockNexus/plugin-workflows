@@ -12,6 +12,12 @@
       "softwareSlug": "quark",
       "label": "Quark",
       "path": "templates/quark.yml"
+    },
+    {
+      "key": "falcon:native",
+      "softwareSlug": "falcon",
+      "label": "Falcon (C++)",
+      "path": "templates/falcon.yml"
     }
   ]
 }

@@ -1,0 +1,89 @@
+# Copy into the plugin repository. Hub replaces {{package_name}} on installation.
+name: BedrockNexus Publish
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out plugin source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      # A Falcon native plugin is a folder: plugin.json next to lib<main>.so.
+      - name: Validate plugin manifest
+        id: manifest
+        run: |
+          if [[ ! -f plugin.json ]]; then
+            echo "::error::plugin.json is missing from the project root."
+            exit 1
+          fi
+          if [[ ! -f CMakeLists.txt ]]; then
+            echo "::error::CMakeLists.txt is missing from the project root."
+            exit 1
+          fi
+
+          runtime="$(jq -r '.runtime // "native"' plugin.json)"
+          if [[ "$runtime" != "native" ]]; then
+            echo "::error::plugin.json declares the '$runtime' runtime; this template builds native C++ plugins."
+            exit 1
+          fi
+
+          main="$(jq -r '.main // empty' plugin.json)"
+          if [[ ! "$main" =~ ^[A-Za-z0-9_.-]+$ ]]; then
+            echo "::error::plugin.json needs a 'main' field naming the library target, such as MyPlugin."
+            exit 1
+          fi
+          echo "main=$main" >> "$GITHUB_OUTPUT"
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Stage the plugin folder
+        env:
+          MAIN: ${{ steps.manifest.outputs.main }}
+          PACKAGE: '{{package_name}}'
+        run: |
+          mapfile -t libraries < <(find build -type f -name "lib${MAIN}.so")
+          if [[ "${#libraries[@]}" -ne 1 ]]; then
+            echo "::error::Expected one lib${MAIN}.so in the build, found ${#libraries[@]}."
+            exit 1
+          fi
+          if ! nm -D --defined-only "${libraries[0]}" | grep -qw falcon_plugin_entry; then
+            echo "::error::lib${MAIN}.so does not export falcon_plugin_entry."
+            exit 1
+          fi
+
+          mkdir -p "stage/$PACKAGE" dist
+          cp -- plugin.json "stage/$PACKAGE/plugin.json"
+          cp -- "${libraries[0]}" "stage/$PACKAGE/lib${MAIN}.so"
+          if [[ -d resource_pack ]]; then
+            cp -R -- resource_pack "stage/$PACKAGE/resource_pack"
+          fi
+
+          (cd stage && zip -qr "../dist/$PACKAGE.zip" "$PACKAGE")
+          unzip -l "dist/$PACKAGE.zip"
+
+      - name: Upload plugin for build selection
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: plugin-package
+          path: 'dist/{{package_name}}.zip'
+          if-no-files-found: error
