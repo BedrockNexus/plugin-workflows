@@ -1,0 +1,75 @@
+# Copy into the plugin repository. Hub replaces {{package_name}} on installation.
+name: BedrockNexus Publish
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out plugin source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP for Altay 5
+        uses: altayofficial/setup-php-action@0951a226d1b89c2acc677bc1b6ca65b867b59441 # altay-1.0.0
+        with:
+          php-version: '8.1'
+          install-path: ../bin
+          pm-version-major: '5'
+
+      - name: Check PHP syntax
+        run: find src -name '*.php' -print0 | xargs -0 -r -n1 php -l
+
+      - name: Check Composer lockfile
+        if: hashFiles('composer.json') != ''
+        run: |
+          if [[ ! -f composer.lock ]]; then
+            echo "::error::composer.json is present but composer.lock is not committed."
+            exit 1
+          fi
+
+      - name: Download Pharynx
+        env:
+          PHARYNX_URL: https://github.com/SOF3/pharynx/releases/download/0.3.8/pharynx.phar
+          PHARYNX_SHA256: de84964df51d595a9d521ee42df010cf6e817b1e5ceef17de6ef884c41b28133
+        run: |
+          curl -fsSL "$PHARYNX_URL" -o "$RUNNER_TEMP/pharynx.phar"
+          echo "$PHARYNX_SHA256  $RUNNER_TEMP/pharynx.phar" | sha256sum -c -
+
+      - name: Build plugin with Pharynx
+        env:
+          COMPOSER_PROJECT: ${{ hashFiles('composer.json') != '' }}
+        run: |
+          BUILD_ARGS=(-i .)
+          if [[ "$COMPOSER_PROJECT" == 'true' ]]; then
+            BUILD_ARGS+=(-c)
+          fi
+          php -dphar.readonly=0 "$RUNNER_TEMP/pharynx.phar" "${BUILD_ARGS[@]}" -p="$RUNNER_TEMP/plugin.phar"
+          test -s "$RUNNER_TEMP/plugin.phar"
+
+      - name: Stage the plugin file
+        env:
+          OUTPUT_PHAR: 'dist/{{package_name}}.phar'
+        run: |
+          mkdir -p dist
+          cp -- "$RUNNER_TEMP/plugin.phar" "$OUTPUT_PHAR"
+
+      - name: Upload plugin for build selection
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: plugin-package
+          path: 'dist/{{package_name}}.phar'
+          if-no-files-found: error
