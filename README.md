@@ -6,6 +6,7 @@ server plugins, maintained by BedrockNexus and community contributors.
 | Server software | Builder | PHP | Template |
 | --- | --- | --- | --- |
 | Axolotl-PM 5 | AxolotlBucketLabs DevTools `4.0.4` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
+| Altay 5 | Pharynx `0.3.8` | 8.1 | [altay.yml](templates/altay.yml) |
 | Falcon | CMake with the runner's GCC, [Falcon PluginAPI](https://github.com/Falcon-MC/PluginAPI) | — | [falcon.yml](templates/falcon.yml) |
 
 ## Use a template
@@ -66,6 +67,14 @@ library is built on `ubuntu-latest` and runs on Linux x86-64 servers only.
 
 The template passed workflow linting and Hub's template validator. Hosted
 Axolotl builds and actual server behavior still need verification.
+
+The Altay template installs PHP from Altay's own binaries and builds with
+Pharynx. Libraries come from Composer: commit `composer.lock` with
+`composer.json`, and declare the plugin's `src/` in its `autoload` section, since
+Pharynx takes source paths from Composer when a `composer.json` is present.
+Composer virions are shaded into the plugin namespace. Plugins without a
+`composer.json` build from `src/` directly. `src-namespace-prefix` in
+`plugin.yml` is not supported.
 
 ## Contribute
 
