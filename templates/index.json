@@ -18,6 +18,12 @@
       "softwareSlug": "altay",
       "label": "Altay",
       "path": "templates/altay.yml"
+    },
+    {
+      "key": "falcon:native",
+      "softwareSlug": "falcon",
+      "label": "Falcon (C++)",
+      "path": "templates/falcon.yml"
     }
   ]
 }

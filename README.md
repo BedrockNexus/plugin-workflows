@@ -7,6 +7,7 @@ server plugins, maintained by BedrockNexus and community contributors.
 | --- | --- | --- | --- |
 | Axolotl-PM 5 | AxolotlBucketLabs DevTools `4.0.4` | 8.4 | [axolotl.yml](templates/axolotl.yml) |
 | Altay 5 | Pharynx `0.3.8` | 8.1 | [altay.yml](templates/altay.yml) |
+| Falcon | CMake with the runner's GCC, [Falcon PluginAPI](https://github.com/Falcon-MC/PluginAPI) | — | [falcon.yml](templates/falcon.yml) |
 
 ## Use a template
 
@@ -53,6 +54,16 @@ updating an installed workflow, move those libraries to Composer. If `.poggit.ym
 lists them too, set `import-poggit-libraries: false` in `devtools.yml`.
 
 This Axolotl template does not establish PMMP compatibility.
+
+The Falcon template builds a native C++ plugin. It expects `plugin.json` and a
+`CMakeLists.txt` at the repository root. The CMake project gets the API through
+`FetchContent` and declares the library with `falcon_add_plugin(<main> ...)`,
+as in the [PluginAPI README](https://github.com/Falcon-MC/PluginAPI#readme).
+Falcon loads a plugin from a folder holding `plugin.json` next to the library,
+so the artifact is one file, `{{package_name}}.zip`, which contains the folder
+`{{package_name}}/` with `plugin.json`, `lib<main>.so` and `resource_pack/` if
+the repository has one. Unzip it into the server's `plugins/` directory. The
+library is built on `ubuntu-latest` and runs on Linux x86-64 servers only.
 
 The template passed workflow linting and Hub's template validator. Hosted
 Axolotl builds and actual server behavior still need verification.
